@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("RanOnlineTrainer")]
-[assembly: AssemblyDescription("Buddy's Trainer")]
+[assembly: AssemblyTitle("SharpUpdate")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Buddy's Trainer")]
-[assembly: AssemblyProduct("RanOnlineTrainer")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("SharpUpdate")]
 [assembly: AssemblyCopyright("Copyright ©  2022")]
-[assembly: AssemblyTrademark("Buddy's Trainer")]
+[assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("b05c28c9-108a-4526-bd62-36f56c2e9c25")]
+[assembly: Guid("0a310e4c-ac46-458c-8d8c-f23eed3c4edf")]
 
 // Version information for an assembly consists of the following four values:
 //

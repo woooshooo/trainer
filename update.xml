@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<sharpUpdate>
+	<update appId="RanOnlineTrainer">
+		<version>2.0.0.0</version>
+		<url>https://bsite.net/woooshooo/trainer/RanOnlineTrainer.exe</url>
+		<fileName>RanOnlineTrainer.exe</fileName>
+		<md5>9af716535c7b9e3069404855ad57ab90</md5>
+		<description>This is just the Initial Update</description>
+		<launchArgs></launchArgs>
+	</update>
+</sharpUpdate>

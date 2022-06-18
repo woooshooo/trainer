@@ -38,6 +38,8 @@
             this.invalidaccess_label = new System.Windows.Forms.Label();
             this.username_tooltip = new System.Windows.Forms.ToolTip(this.components);
             this.adminlogin_btn = new System.Windows.Forms.Button();
+            this.checkUpdate_btn = new System.Windows.Forms.Button();
+            this.version_label = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // login_label
@@ -122,6 +124,26 @@
             this.adminlogin_btn.UseVisualStyleBackColor = true;
             this.adminlogin_btn.Click += new System.EventHandler(this.adminlogin_btn_Click);
             // 
+            // checkUpdate_btn
+            // 
+            this.checkUpdate_btn.Location = new System.Drawing.Point(12, 327);
+            this.checkUpdate_btn.Name = "checkUpdate_btn";
+            this.checkUpdate_btn.Size = new System.Drawing.Size(119, 27);
+            this.checkUpdate_btn.TabIndex = 7;
+            this.checkUpdate_btn.Text = "Check for Updates";
+            this.checkUpdate_btn.UseVisualStyleBackColor = true;
+            this.checkUpdate_btn.Click += new System.EventHandler(this.checkUpdate_btn_Click);
+            // 
+            // version_label
+            // 
+            this.version_label.AutoSize = true;
+            this.version_label.ForeColor = System.Drawing.Color.White;
+            this.version_label.Location = new System.Drawing.Point(12, 308);
+            this.version_label.Name = "version_label";
+            this.version_label.Size = new System.Drawing.Size(79, 13);
+            this.version_label.TabIndex = 8;
+            this.version_label.Text = "Current Version";
+            // 
             // login
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -130,6 +152,8 @@
             this.BackgroundImage = global::RanOnlineTrainer.Properties.Resources.rock;
             this.ClientSize = new System.Drawing.Size(372, 370);
             this.ControlBox = false;
+            this.Controls.Add(this.version_label);
+            this.Controls.Add(this.checkUpdate_btn);
             this.Controls.Add(this.adminlogin_btn);
             this.Controls.Add(this.invalidaccess_label);
             this.Controls.Add(this.CloseLabel);
@@ -159,5 +183,7 @@
         private System.Windows.Forms.Label invalidaccess_label;
         private System.Windows.Forms.ToolTip username_tooltip;
         public System.Windows.Forms.Button adminlogin_btn;
+        private System.Windows.Forms.Button checkUpdate_btn;
+        private System.Windows.Forms.Label version_label;
     }
 }

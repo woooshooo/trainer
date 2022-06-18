@@ -143,6 +143,7 @@
             this.Controls.Add(this.MinimizeLabel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "admin";
+            this.ShowInTaskbar = false;
             this.Text = "admin";
             this.Load += new System.EventHandler(this.admin_Load);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.admin_MouseDown);

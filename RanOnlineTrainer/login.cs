@@ -1,26 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using SharpUpdate;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace RanOnlineTrainer
 {
-    public partial class login : Form
+    public partial class login : Form, ISharpUpdateable
     {
         /* SETUP */
 
         private readonly string connectionString = "Data Source=sql.bsite.net\\MSSQL2016;Initial Catalog=woooshooo_randb;Persist Security Info=True;User ID=woooshooo_randb;Password=qweqwe123";
-        
+
         SqlConnection connection;
         public static SqlCommand command;
         public static Guid id;
-        public static string username;       
+        public static string username;
         public static int allowedactive;
         public static int active;
         public static DateTime lastlogin;
@@ -28,14 +25,70 @@ namespace RanOnlineTrainer
         public static DataTable dt;
         public static SqlDataAdapter da;
         private Boolean isValid = false;
+        private SharpUpdater updater;
+
         public login()
         {
             InitializeComponent();
+            this.version_label.Text = "Current Version: " + this.ApplicationAssembly.GetName().Version.ToString();
+            updater = new SharpUpdater(this);
         }
+
+        /* For Auto Update */
+        public string ApplicationName {
+            get {
+                return "RanOnlineTrainer";
+            }
+        }
+        public string ApplicationID
+        {
+            get
+            {
+                return "RanOnlineTrainer";
+            }
+        }
+
+        public Assembly ApplicationAssembly
+        {
+            get
+            {
+                return Assembly.GetExecutingAssembly();
+            }
+        }
+
+        public Icon ApplicationIcon
+        {
+            get
+            {
+                return this.Icon;
+            }
+        }
+
+        public Uri UpdateXmlLocation
+        {
+            get
+            {
+                return new Uri("https://bsite.net/woooshooo/trainer/update.xml");
+            }
+        }
+
+        public Form Context
+        {
+            get
+            {
+                return this;
+            }
+        }
+
+        
+
+       
 
         //FOR MOVE FORM 
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;
+
+        
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
@@ -195,6 +248,10 @@ namespace RanOnlineTrainer
             return isAllowed;
         }
 
-        
+        private void checkUpdate_btn_Click(object sender, EventArgs e)
+        {
+            updater.DoUpdate();
+            Console.WriteLine("clicking the check update button...");
+        }
     }
 }

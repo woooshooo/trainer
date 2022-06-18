@@ -1,22 +1,13 @@
 ﻿using Memory;
-using RanOnlineTrainer.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Resources;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using WindowsInput;
-using WindowsInput.Native;
-using System.Management;
 
 namespace RanOnlineTrainer
 {
@@ -62,7 +53,7 @@ namespace RanOnlineTrainer
         private readonly string pierceThruWalls2 = "004BFA74";
         private readonly string qAutoPots = "0075D0D8";
         private readonly string qweAutoPots = "02F22DCC";
-        private readonly string dwRange = "009BF62C";
+        //private readonly string dwRange = "009BF62C";
         private readonly string dwDD1 = "004D0BE1";
         private readonly string dwDD2 = "004D0BFF";
         private readonly string dwNOTAR1 = "004BF8FA";
@@ -131,6 +122,8 @@ namespace RanOnlineTrainer
         //waitserver_message , 3rd, 412 to 399
         //MAP_MOVE_BLOCK_RECALL, 2ND JE AT TOP-> JMP
         //MAP_MOVE_BLOCK_TELEPORT, 2ND JE AT TOP-> JMP
+
+        //CertUtil -hashfile RanOnlineTrainer.exe MD5 ->> to get MD5sum
 
 
         bool AttackSpeed = false;

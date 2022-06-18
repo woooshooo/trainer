@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31019.35
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32526.322
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RanOnlineTrainer", "RanOnlineTrainer\RanOnlineTrainer.csproj", "{B05C28C9-108A-4526-BD62-36F56C2E9C25}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpUpdate", "SharpUpdate\SharpUpdate.csproj", "{0A310E4C-AC46-458C-8D8C-F23EED3C4EDF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,14 @@ Global
 		{B05C28C9-108A-4526-BD62-36F56C2E9C25}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B05C28C9-108A-4526-BD62-36F56C2E9C25}.Release|x86.ActiveCfg = Release|x86
 		{B05C28C9-108A-4526-BD62-36F56C2E9C25}.Release|x86.Build.0 = Release|x86
+		{0A310E4C-AC46-458C-8D8C-F23EED3C4EDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A310E4C-AC46-458C-8D8C-F23EED3C4EDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A310E4C-AC46-458C-8D8C-F23EED3C4EDF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0A310E4C-AC46-458C-8D8C-F23EED3C4EDF}.Debug|x86.Build.0 = Debug|Any CPU
+		{0A310E4C-AC46-458C-8D8C-F23EED3C4EDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A310E4C-AC46-458C-8D8C-F23EED3C4EDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A310E4C-AC46-458C-8D8C-F23EED3C4EDF}.Release|x86.ActiveCfg = Release|Any CPU
+		{0A310E4C-AC46-458C-8D8C-F23EED3C4EDF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
