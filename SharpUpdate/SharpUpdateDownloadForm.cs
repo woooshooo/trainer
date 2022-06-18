@@ -20,6 +20,7 @@ using System.Runtime.InteropServices;
 using AltoHttp.Exceptions;
 using AltoHttp.NativeMessages;
 
+
 namespace SharpUpdate
 {
     internal partial class SharpUpdateDownloadForm : Form
