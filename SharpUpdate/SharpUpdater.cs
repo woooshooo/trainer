@@ -15,7 +15,7 @@ namespace SharpUpdate
         private ISharpUpdateable applicationInfo;
         private BackgroundWorker bgWorker;
         private PowerShell ps;
-        Thread newThread;
+
         public SharpUpdater (ISharpUpdateable applicationInfo)
         {
             this.applicationInfo = applicationInfo;
@@ -24,11 +24,9 @@ namespace SharpUpdate
             this.bgWorker.RunWorkerCompleted += BgWorker_RunWorkerCompleted;
         }
         public void DoUpdate() {
-            Console.WriteLine("i am in the do update in sharpupdater.cs");
             if (!this.bgWorker.IsBusy)
             {
                 this.bgWorker.RunWorkerAsync(this.applicationInfo);
-                Console.WriteLine("BG WORKER IS NOT BUSY running RunWorkerAsync");
             }
             else {
                 MessageBox.Show("Trainer up to date.");
@@ -51,7 +49,6 @@ namespace SharpUpdate
                 if (update != null && update.IsNewerThan(this.applicationInfo.ApplicationAssembly.GetName().Version)) { 
                     if (new SharpUpdateAcceptForm(this.applicationInfo, update).ShowDialog(this.applicationInfo.Context) == DialogResult.Yes){
                         Console.WriteLine("DownloadUpdate from SharpUpdater");
-                        //MessageBox.Show("DownloadUpdate from SharpUpdater");
                         this.DownloadUpdate(update);
                     }
                 }
@@ -63,13 +60,12 @@ namespace SharpUpdate
         {
             Console.WriteLine("Inside Download Update");
             SharpUpdateDownloadForm form = new SharpUpdateDownloadForm(update.Uri, update.MD5, this.applicationInfo.ApplicationIcon);
-            
             DialogResult result = form.ShowDialog(this.applicationInfo.Context);
             Console.WriteLine("Dialog result: " + result);
             if (result == DialogResult.OK) {
                 string currentPath = this.applicationInfo.ApplicationAssembly.Location;
                 string newPath = Path.GetDirectoryName(currentPath) + "\\" + update.FileName;
-                UpdateApplication(form.TempFilePath, currentPath, newPath, update.LaunchArgs);
+                UpdateApplication(form.TempFilePath, currentPath, newPath, update.Version.ToString());
                 MessageBox.Show("Download Complete.\nYou can delete this old version.\nApp will now close.");
                 Application.Exit();
             } else if (result == DialogResult.Abort) {
@@ -81,16 +77,22 @@ namespace SharpUpdate
             }
         }
 
-        private void UpdateApplication(string tempFilePath, string currentPath, string newPath, string launchArgs)
+        private void UpdateApplication(string tempFilePath, string currentPath, string newPath, string version)
         {
-            string newFileName = "Updated " + Path.GetFileName(newPath);
+            string currname = Path.GetFileName(newPath);
+            string[] splitText = currname.Split('.');
+            string newFileName = splitText[0] + " v" + version + "." + splitText[1];
             string updatedPath = Path.GetDirectoryName(newPath) + "\\" + newFileName;
             //string s = String.Format("Copy-Item \"{0}\" -Destination \"{1}\"", tempFilePath, newPath);
 
             //MessageBox.Show("Running Script...");
             ps = PowerShell.Create();            
             ps.AddCommand("Copy-Item").AddParameter("Path", tempFilePath).AddParameter("Destination", updatedPath).Invoke();
+            ps = PowerShell.Create();
             ps.AddCommand("Remove-Item").AddParameter("Path", tempFilePath).Invoke();
+            ps.Stop();
+
+            //CertUtil -hashfile RanOnlineTrainer.exe MD5 ->> to get MD5sum
         }
 
 
