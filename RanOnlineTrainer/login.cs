@@ -4,6 +4,7 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.Management.Automation;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -28,7 +29,10 @@ namespace RanOnlineTrainer
         public static MySqlDataAdapter da;
         private Boolean isValid = false;
         private SharpUpdater updater;
-    
+        private PowerShell ps;
+        private int getIpRetries = 0;
+        private int getIpMAXRetries = 3;
+
 
         public login()
         {
@@ -274,7 +278,7 @@ namespace RanOnlineTrainer
                 update.Parameters.AddWithValue("@date", Convert.ToDateTime(DateTime.Now));
                 update.Parameters.AddWithValue("@user", username);
                 update.Parameters.AddWithValue("@ipaddress", getPublicIpAddress());
-                update.ExecuteNonQuery();
+                update.ExecuteNonQueryAsync();
                 isAllowed = true;
             }
             return isAllowed;
@@ -287,17 +291,35 @@ namespace RanOnlineTrainer
         }
 
         private string getPublicIpAddress() {
-            string url = "http://checkip.dyndns.org";
-            System.Net.WebRequest req = System.Net.WebRequest.Create(url);
-            System.Net.WebResponse resp = req.GetResponse();
-            System.IO.StreamReader sr = new System.IO.StreamReader(resp.GetResponseStream());
-            string response = sr.ReadToEnd().Trim();
-            string[] ipAddressWithText = response.Split(':');
-            string ipAddressWithHTMLEnd = ipAddressWithText[1].Substring(1);
-            string[] ipAddress = ipAddressWithHTMLEnd.Split('<');
-            string mainIP = ipAddress[0];
-            Console.WriteLine(mainIP);
-            return mainIP;
+            try
+            {
+                string url = "http://checkip.dyndns.org";
+                System.Net.WebRequest req = System.Net.WebRequest.Create(url);
+                System.Net.WebResponse resp = req.GetResponse();
+                System.IO.StreamReader sr = new System.IO.StreamReader(resp.GetResponseStream());
+                string response = sr.ReadToEnd().Trim();
+                string[] ipAddressWithText = response.Split(':');
+                string ipAddressWithHTMLEnd = ipAddressWithText[1].Substring(1);
+                string[] ipAddress = ipAddressWithHTMLEnd.Split('<');
+                string mainIP = ipAddress[0];
+                Console.WriteLine(mainIP);
+                sr.Close();
+                resp.Close();
+                return mainIP;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                ps = PowerShell.Create();
+                ps.AddCommand("Clear-DnsClientCache").Invoke();
+                ps.Stop();
+                if (getIpRetries != getIpMAXRetries) {
+                    getPublicIpAddress();
+                    getIpRetries++;
+                }
+                return "Could not get IP";
+            }
+            
         }
     }
 }
