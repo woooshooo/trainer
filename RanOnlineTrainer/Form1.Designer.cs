@@ -56,10 +56,11 @@ namespace RanOnlineTrainer
             this.label1 = new System.Windows.Forms.Label();
             this.attkspd_btn = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.guid_label = new System.Windows.Forms.Label();
             this.account_label = new System.Windows.Forms.Label();
             this.lastlogin_label = new System.Windows.Forms.Label();
             this.accounts_btn = new System.Windows.Forms.Button();
+            this.LRComboBox = new System.Windows.Forms.ComboBox();
+            this.LR_label = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // BGWorker
@@ -210,7 +211,7 @@ namespace RanOnlineTrainer
             this.HPFLabel.BackColor = System.Drawing.Color.Transparent;
             this.HPFLabel.Font = new System.Drawing.Font("Arial Narrow", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.HPFLabel.ForeColor = System.Drawing.Color.Linen;
-            this.HPFLabel.Location = new System.Drawing.Point(1, 263);
+            this.HPFLabel.Location = new System.Drawing.Point(1, 287);
             this.HPFLabel.Name = "HPFLabel";
             this.HPFLabel.Size = new System.Drawing.Size(97, 25);
             this.HPFLabel.TabIndex = 0;
@@ -218,7 +219,7 @@ namespace RanOnlineTrainer
             // 
             // HPFButton
             // 
-            this.HPFButton.Location = new System.Drawing.Point(105, 267);
+            this.HPFButton.Location = new System.Drawing.Point(105, 291);
             this.HPFButton.Name = "HPFButton";
             this.HPFButton.Size = new System.Drawing.Size(68, 23);
             this.HPFButton.TabIndex = 2;
@@ -242,11 +243,11 @@ namespace RanOnlineTrainer
             this.AOELRLABEL.BackColor = System.Drawing.Color.Transparent;
             this.AOELRLABEL.Font = new System.Drawing.Font("Arial Narrow", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AOELRLABEL.ForeColor = System.Drawing.Color.Linen;
-            this.AOELRLABEL.Location = new System.Drawing.Point(7, 196);
+            this.AOELRLABEL.Location = new System.Drawing.Point(49, 196);
             this.AOELRLABEL.Name = "AOELRLABEL";
-            this.AOELRLABEL.Size = new System.Drawing.Size(92, 25);
+            this.AOELRLABEL.Size = new System.Drawing.Size(48, 25);
             this.AOELRLABEL.TabIndex = 0;
-            this.AOELRLABEL.Text = "AOE n LR";
+            this.AOELRLABEL.Text = "AOE";
             // 
             // qaplabel
             // 
@@ -254,7 +255,7 @@ namespace RanOnlineTrainer
             this.qaplabel.BackColor = System.Drawing.Color.Transparent;
             this.qaplabel.Font = new System.Drawing.Font("Arial Narrow", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.qaplabel.ForeColor = System.Drawing.Color.Linen;
-            this.qaplabel.Location = new System.Drawing.Point(63, 231);
+            this.qaplabel.Location = new System.Drawing.Point(63, 255);
             this.qaplabel.Name = "qaplabel";
             this.qaplabel.Size = new System.Drawing.Size(35, 25);
             this.qaplabel.TabIndex = 0;
@@ -262,7 +263,7 @@ namespace RanOnlineTrainer
             // 
             // QAPButton
             // 
-            this.QAPButton.Location = new System.Drawing.Point(105, 231);
+            this.QAPButton.Location = new System.Drawing.Point(105, 255);
             this.QAPButton.Name = "QAPButton";
             this.QAPButton.Size = new System.Drawing.Size(68, 23);
             this.QAPButton.TabIndex = 2;
@@ -325,16 +326,6 @@ namespace RanOnlineTrainer
             this.label2.Text = "“Don’t cheat if you don’t want to be cheated. ” — Israelmore Ayivor";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // guid_label
-            // 
-            this.guid_label.AutoSize = true;
-            this.guid_label.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.guid_label.Location = new System.Drawing.Point(8, 314);
-            this.guid_label.Name = "guid_label";
-            this.guid_label.Size = new System.Drawing.Size(58, 13);
-            this.guid_label.TabIndex = 5;
-            this.guid_label.Text = "Trainer for:";
-            // 
             // account_label
             // 
             this.account_label.AutoSize = true;
@@ -365,6 +356,29 @@ namespace RanOnlineTrainer
             this.accounts_btn.UseVisualStyleBackColor = true;
             this.accounts_btn.Click += new System.EventHandler(this.accounts_btn_Click);
             // 
+            // LRComboBox
+            // 
+            this.LRComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.LRComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LRComboBox.FormattingEnabled = true;
+            this.LRComboBox.Location = new System.Drawing.Point(105, 228);
+            this.LRComboBox.Name = "LRComboBox";
+            this.LRComboBox.Size = new System.Drawing.Size(67, 21);
+            this.LRComboBox.TabIndex = 9;
+            this.LRComboBox.SelectionChangeCommitted += new System.EventHandler(this.LRComboBox_SelectionChangeCommitted);
+            // 
+            // LR_label
+            // 
+            this.LR_label.AutoSize = true;
+            this.LR_label.BackColor = System.Drawing.Color.Transparent;
+            this.LR_label.Font = new System.Drawing.Font("Arial Narrow", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LR_label.ForeColor = System.Drawing.Color.Linen;
+            this.LR_label.Location = new System.Drawing.Point(62, 226);
+            this.LR_label.Name = "LR_label";
+            this.LR_label.Size = new System.Drawing.Size(35, 25);
+            this.LR_label.TabIndex = 10;
+            this.LR_label.Text = "LR";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -374,10 +388,11 @@ namespace RanOnlineTrainer
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(372, 370);
             this.ControlBox = false;
+            this.Controls.Add(this.LR_label);
+            this.Controls.Add(this.LRComboBox);
             this.Controls.Add(this.accounts_btn);
             this.Controls.Add(this.lastlogin_label);
             this.Controls.Add(this.account_label);
-            this.Controls.Add(this.guid_label);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.attkspd_btn);
             this.Controls.Add(this.QAPButton);
@@ -442,10 +457,11 @@ namespace RanOnlineTrainer
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button attkspd_btn;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label guid_label;
         private System.Windows.Forms.Label account_label;
         private System.Windows.Forms.Label lastlogin_label;
         private System.Windows.Forms.Button accounts_btn;
+        private System.Windows.Forms.ComboBox LRComboBox;
+        private System.Windows.Forms.Label LR_label;
     }
 }
 

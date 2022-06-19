@@ -53,7 +53,9 @@ namespace RanOnlineTrainer
         private readonly string pierceThruWalls2 = "004BFA74";
         private readonly string qAutoPots = "0075D0D8";
         private readonly string qweAutoPots = "02F22DCC";
-        //private readonly string dwRange = "009BF62C";
+        private readonly string dwRange = "009BF62C";
+        private readonly string dwRangeWalkBypass = "00424FAC";
+        private readonly string dwRangeDropBypass = "0042596A";
         private readonly string dwDD1 = "004D0BE1";
         private readonly string dwDD2 = "004D0BFF";
         private readonly string dwNOTAR1 = "004BF8FA";
@@ -77,43 +79,6 @@ namespace RanOnlineTrainer
         private readonly string dwDropDisabledCT = "0047D651";
         private readonly string dwNameWallHack = "005E1A21"; //DRAW_ALPHA_MAP
 
-        //One Classic
-        //private readonly string gameclient = "gameclient";
-        //private readonly string droneAddress = "0090E77C";
-        //private readonly string atkspeedAddress = "00D5B038";
-        //private readonly string hpfAddress = "00B663A4";  //fHP_INC
-        //private readonly string pierceThruWalls1 = "004BC40C";
-        //private readonly string pierceThruWalls2 = "004BC42F";
-        //private readonly string qAutoPots = "0075BA5E";
-        //private readonly string qweAutoPots = "02ECBA6C";
-        //private readonly string dwRange = "009BF62C";
-        //private readonly string dwDD1 = "004D03E1";
-        //private readonly string dwDD2 = "004D03FF";
-        //private readonly string dwNOTAR1 = "004BC2B8";
-        //private readonly string dwNOTAR2 = "004BC2CB";
-        //private readonly string dw5b = "004CDF7F";
-        //private readonly string dw1up = "004CDCA3";
-        //private readonly string dw2up = "004CD871";
-        //private readonly string dw3up = "004CD615";
-        //private readonly string dw4up = "004CD3A3";
-        //private readonly string dw5up = "004CCF92";
-        //private readonly string dw6up = "004CCCF1";
-        //private readonly string dw1down = "004CEA54";
-        //private readonly string dw2down = "004CF0F3";
-        //private readonly string dw2eaxeax = "005E0972";
-        //private readonly string dwItemMallDelay = "00707EC0";
-        //private readonly string dwBankDelay = "007079D3";
-        //private readonly string dwBoardDelay = "00711830";
-        //private readonly string dwUnliChat = "00799140";
-        //private readonly string dwFastTeleport = "0071B86B";
-        //private readonly string dwStartPointTW = "00475E66";
-        //private readonly string dwDropDisabledCT = "0047CD66";
-        //private readonly string dwNameWallHack = "005E27D1"; //DRAW_ALPHA_MAP
-        //private readonly string freeAddress = "00D02D08"; //Free Address 
-        //private readonly string bodyRadWalkBypass = "0042482C"; 
-        //private readonly string bodyRadDropBypass = "004251AA";
-        //private readonly string bodyRadAOE = "004BE390";
-
 
         /* ------------ END of ADDRESS ----------- */
 
@@ -124,6 +89,14 @@ namespace RanOnlineTrainer
         //MAP_MOVE_BLOCK_TELEPORT, 2ND JE AT TOP-> JMP
 
         //CertUtil -hashfile RanOnlineTrainer.exe MD5 ->> to get MD5sum
+
+        /** AOE / LR
+         *above push(5 codes)
+         *lakad aoe = mov cx
+         *dikit drop = movzx eax (below cx)
+         *below push(2 codes)
+         *byte aoe = mov dx    
+        **/
 
 
         bool AttackSpeed = false;
@@ -138,6 +111,7 @@ namespace RanOnlineTrainer
             //INIT FORM
             ProcessExeLabel.Text = "Not Found";
             StatusValueLabel.Text = "WAITING";
+            PIDValueLabel.Text = "WAITING";
             StatusValueLabel.ForeColor = Color.FromArgb(255, 0, 0); //RED
             if (admin.ADMIN_LOGIN == 0) {
                 accounts_btn.Hide();
@@ -190,6 +164,7 @@ namespace RanOnlineTrainer
                 ProcessExeLabel.Text = "Not Found";
                 StatusValueLabel.Text = "WAITING";
                 StatusValueLabel.ForeColor = Color.FromArgb(255, 0, 0); //RED
+                PIDValueLabel.Text = "WAITING";
             }
 
             PIDValueLabel.Text = Convert.ToString(m.GetProcIdFromName(gameclient));
@@ -207,10 +182,15 @@ namespace RanOnlineTrainer
             connection = new SqlConnection(connectionString);
             command = new SqlCommand("* FROM account WHERE username='" + login.username + "'", connection);
             connection.Open();
-            guid_label.Text = guid_label.Text + " " + login.id;
             account_label.Text = account_label.Text + " " + login.username;
             lastlogin_label.Text = lastlogin_label.Text + " " + login.lastlogin;
-            // FOR DRONE VALUES
+
+            INITComboBoxFunc();
+
+        }
+
+        private void INITComboBoxFunc() { 
+        // FOR DRONE VALUES
             //Init Data
             List<DroneLevels> listDroneLevels = new List<DroneLevels>
             {
@@ -225,6 +205,22 @@ namespace RanOnlineTrainer
             DroneComboBox.DisplayMember = "droneLevel";
             DroneComboBox.ValueMember = "droneLevelVal";
             DroneComboBox.SelectedIndex = 0;
+
+        // FOR LR VALUES
+            //Init Data
+            List<LRLevels> listLRLevels = new List<LRLevels>
+            {
+                new LRLevels() { LRLevel = "Default", LRLevelVal = "4" },
+                new LRLevels() { LRLevel = "Level 2", LRLevelVal = "15" },
+                new LRLevels() { LRLevel = "Level 3", LRLevelVal = "20" },
+                new LRLevels() { LRLevel = "Level 4", LRLevelVal = "30" },
+                new LRLevels() { LRLevel = "Level 5", LRLevelVal = "40" }
+            };
+            //Set display member and value member
+            LRComboBox.DataSource = listLRLevels;
+            LRComboBox.DisplayMember = "LRLevel";
+            LRComboBox.ValueMember = "LRLevelVal";
+            LRComboBox.SelectedIndex = 0;
         }
 
         //FOR MOVING THE FORM 
@@ -272,8 +268,13 @@ namespace RanOnlineTrainer
 
         private void accounts_btn_Click(object sender, EventArgs e)
         {
-            admin adminfrm = new admin();
-            adminfrm.Show();
+            admin adminfrm;
+            bool formOpened = false;
+            if (!formOpened) {
+                adminfrm = new admin();
+                adminfrm.Show();
+                formOpened = true;
+            }
         }
 
         public static void ps_sistema_bypass() {
@@ -308,7 +309,25 @@ namespace RanOnlineTrainer
 
 
         // ------------------ CHEATS BELOW HERE -------------------------------------------------//
+        private void HPFButton_Click(object sender, EventArgs e)
+        {
+            if (!HPF)
+            {
+                Console.WriteLine("HPF Turned ON");
+                HPFButton.Text = "ON";
+                m.WriteMemory(hpfAddress, "float", "9999999");
 
+                HPF = true;
+            }
+            else
+            {
+                Console.WriteLine("HPF Turned OFF");
+                HPFButton.Text = "OFF";
+                m.WriteMemory(hpfAddress, "float", "0.3000000119");
+                HPF = false;
+            }
+
+        }
 
         private void DroneComboBox_SelectionChangeCommitted(object sender, EventArgs e)
         {
@@ -321,26 +340,33 @@ namespace RanOnlineTrainer
 
         }
 
-
-        private void HPFButton_Click(object sender, EventArgs e)
+        private void LRComboBox_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (!HPF)
-            {
-                Console.WriteLine("HPF Turned ON");
-                HPFButton.Text = "ON";
-                m.WriteMemory(hpfAddress, "float", "9999999");
-                
-                HPF = true;
-            }
-            else
-            {
-                Console.WriteLine("HPF Turned OFF");
-                HPFButton.Text = "OFF";
-                m.WriteMemory(hpfAddress, "float", "0.3000000119");
-                HPF = false;
-            }
-               
+            LRLevels lrLevelsObj = LRComboBox.SelectedItem as LRLevels;
+            if (lrLevelsObj != null) {
+                if (lrLevelsObj.LRLevel == "Default")
+                {
+                    m.WriteMemory(dwRange, "byte", lrLevelsObj.LRLevelVal);
+                    m.WriteMemory(dwNOTAR1, "bytes", "0F 85 1A 01 00");
+                    m.WriteMemory(dwNOTAR2, "bytes", "0F 85 F3 00 00");
+                    m.WriteMemory(dwRangeWalkBypass, "bytes", "66 8B 0D 2C F6 9B 00");
+                    m.WriteMemory(dwRangeDropBypass, "bytes", "0F B7 05 2C F6 9B 00");
+                }
+                else if (lrLevelsObj.LRLevel == "Level 5")
+                {
+                    m.WriteMemory(dwNOTAR1, "bytes", "E9 1B 01 00 00");
+                    m.WriteMemory(dwNOTAR2, "bytes", "E9 F4 00 00 00");
+                    m.WriteMemory(dwRangeWalkBypass, "bytes", "90 90 90 90 90 90 90");
+                    m.WriteMemory(dwRangeDropBypass, "bytes", "90 90 90 90 90 90 90");
+                }
+                else {
+                    m.WriteMemory(dwRange, "byte", lrLevelsObj.LRLevelVal);
+                    m.WriteMemory(dwRangeWalkBypass, "bytes", "90 90 90 90 90 90 90");
+                    m.WriteMemory(dwRangeDropBypass, "bytes", "90 90 90 90 90 90 90");
+                }
+            }                  
         }
+ 
 
         private void AOELRButton_Click(object sender, EventArgs e)
         {
@@ -354,8 +380,8 @@ namespace RanOnlineTrainer
                 //m.WriteMemory(bodyRadAOE, "bytes", "66 8B 15 08 2D D0");
                 m.WriteMemory(dwDD1, "byte", "75"); //For DD1
                 m.WriteMemory(dwDD2, "byte", "75"); //For DD2
-                m.WriteMemory(dwNOTAR1, "bytes", "E9 1B 01 00 00"); //notar lr 1
-                m.WriteMemory(dwNOTAR2, "bytes", "E9 F4 00 00 00"); //notar lr 2
+                //m.WriteMemory(dwNOTAR1, "bytes", "E9 1B 01 00 00"); //notar lr 1
+                //m.WriteMemory(dwNOTAR2, "bytes", "E9 F4 00 00 00"); //notar lr 2
                 m.WriteMemory(dw5b, "bytes", "8D 44 11 5B"); //eax,[ecx+edx+5B]
                 m.WriteMemory(dw1up, "bytes", "90 90 90 90 90 90 90"); //1-6 up 1-2 down
                 m.WriteMemory(dw2up, "bytes", "90 90 90 90 90 90 90");
@@ -378,8 +404,8 @@ namespace RanOnlineTrainer
                 //m.WriteMemory(bodyRadAOE, "bytes", "66 8B 15 CC F7 9B");
                 m.WriteMemory(dwDD1, "byte", "74"); //For DD1
                 m.WriteMemory(dwDD2, "byte", "74"); //For DD2
-                m.WriteMemory(dwNOTAR1, "bytes", "0F 85 1A 01 00"); //notar lr 1
-                m.WriteMemory(dwNOTAR2, "bytes", "0F 85 F3 00 00"); //notar lr 2
+                //m.WriteMemory(dwNOTAR1, "bytes", "0F 85 1A 01 00"); //notar lr 1
+                //m.WriteMemory(dwNOTAR2, "bytes", "0F 85 F3 00 00"); //notar lr 2
                 m.WriteMemory(dw5b, "bytes", "8D 44 11 02"); //eax,[ecx+edx+5B]
                 m.WriteMemory(dw1up, "bytes", "0F B7 05 2C F6 9B 00"); //1-6 up 1-2 down
                 m.WriteMemory(dw2up, "bytes", "0F B7 05 2C F6 9B 00");

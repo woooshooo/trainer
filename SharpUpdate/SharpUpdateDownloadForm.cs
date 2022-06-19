@@ -87,13 +87,13 @@ namespace SharpUpdate
             if (programIcon != null) this.Icon = programIcon;
             tempFile = Path.GetTempFileName();
             this.md5 = md5;
-
+            
             bgWorker = new BackgroundWorker();
             bgWorker.DoWork += BgWorker_DoWork;
             bgWorker.RunWorkerCompleted += BgWorker_RunWorkerCompleted;
             try
             {
-                Console.WriteLine("trying to downloadfileasync");
+                Console.WriteLine("trying");
                 Console.WriteLine("location: " + location);
                 Console.WriteLine("tempFile: " + this.tempFile);
 
@@ -108,8 +108,9 @@ namespace SharpUpdate
                 httpDownloader.Start();
                 
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.WriteLine("This is the exception error: " + e.Message);
                 this.DialogResult = DialogResult.No;
                 this.Close();
             }

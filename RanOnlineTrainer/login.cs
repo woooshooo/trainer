@@ -1,4 +1,5 @@
-﻿using SharpUpdate;
+﻿using MySqlConnector;
+using SharpUpdate;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -12,20 +13,22 @@ namespace RanOnlineTrainer
     {
         /* SETUP */
 
-        private readonly string connectionString = "Data Source=sql.bsite.net\\MSSQL2016;Initial Catalog=woooshooo_randb;Persist Security Info=True;User ID=woooshooo_randb;Password=qweqwe123";
+        //rivate readonly string connectionString = "Data Source=sql.bsite.net\\MSSQL2016;Initial Catalog=woooshooo_randb;Persist Security Info=True;User ID=woooshooo_randb;Password=qweqwe123";
+        private readonly string connectionString = "Server=sql598.main-hosting.eu;User ID=u687082794_wkbg;Password=Qweqwe123;Database=u687082794_randatabase;Allow User Variables=true";
 
-        SqlConnection connection;
-        public static SqlCommand command;
-        public static Guid id;
+        MySqlConnection connection;
+        public static MySqlCommand command;
+        public static int id;
         public static string username;
         public static int allowedactive;
         public static int active;
         public static DateTime lastlogin;
         public static string ranserver;
         public static DataTable dt;
-        public static SqlDataAdapter da;
+        public static MySqlDataAdapter da;
         private Boolean isValid = false;
         private SharpUpdater updater;
+    
 
         public login()
         {
@@ -68,7 +71,7 @@ namespace RanOnlineTrainer
         {
             get
             {
-                return new Uri("https://bsite.net/woooshooo/trainer/update.xml");
+                return new Uri("http://webstergenise.com/trainer/update.xml");
             }
         }
 
@@ -136,10 +139,34 @@ namespace RanOnlineTrainer
             username_tooltip.SetToolTip(useraccount_tb, "Enter Account given here.");
         }
 
+        internal void testConnection() {
+            try
+            {
+                using (var connection = new MySqlConnection("Server=sql598.main-hosting.eu;User ID=u687082794_wkbg;Password=Qweqwe123;Database=u687082794_randatabase"))
+                {
+                    connection.Open();
+                    MessageBox.Show("Connection OK.");
+                    using (var command = new MySqlCommand("SELECT * FROM accounts", connection))
+                    using (var reader = command.ExecuteReader())
+                        while (reader.Read())
+                            Console.WriteLine("Testing Connection: " + reader.GetInt32(0).ToString() + " " + reader.GetString(1));
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Connection Not OK.");
+            }
+
+        }
+
         private void login_Load(object sender, EventArgs e)
         {
-            connection = new SqlConnection(connectionString);
+            connection = new MySqlConnection(connectionString);
             invalidaccess_label.Hide();
+
+            //Test Connection
+            //testConnection();         
+            
         }
         private void adminlogin_btn_Click(object sender, EventArgs e)
         {
@@ -152,9 +179,9 @@ namespace RanOnlineTrainer
                 if (updateCurrentActive())
                 {
                     MainForm mainfrm = new MainForm();
-                    admin adminfrm = new admin();
+                    //admin adminfrm = new admin();
                     mainfrm.Show();
-                    adminfrm.Show();
+                    //adminfrm.Show();
                     this.Hide();
                 }
                 else
@@ -195,9 +222,11 @@ namespace RanOnlineTrainer
             }
         }
         private Boolean checkLogin(string user_input) {
-            command = new SqlCommand("SELECT username,* FROM account WHERE username='" + user_input + "'", connection);
+            string commandText = "SELECT * FROM u687082794_randatabase.accounts WHERE username=@user";          
+            command = new MySqlCommand(commandText, connection);
+            command.Parameters.AddWithValue("@user", user_input);
             connection.Open();
-            if ((String)command.ExecuteScalar() != null) {
+            if (Convert.ToString(command.ExecuteScalar()) != null) {
                 isValid = true;
             }
             return isValid;
@@ -205,9 +234,11 @@ namespace RanOnlineTrainer
 
         private Boolean checkAdminLogin(string user_input)
         {
-            command = new SqlCommand("SELECT username,* FROM account WHERE username='" + user_input + "' AND ranserver = 'admin'", connection);
+            string commandText = "SELECT * FROM u687082794_randatabase.accounts WHERE username = @user AND ranserver = 'admin'";
+            command = new MySqlCommand(commandText, connection);
+            command.Parameters.AddWithValue("@user", user_input);
             connection.Open();
-            if ((String)command.ExecuteScalar() != null)
+            if (Convert.ToString(command.ExecuteScalar()) != null)
             {
                 isValid = true;
             }
@@ -216,13 +247,13 @@ namespace RanOnlineTrainer
         private void setResultToDataTable() {
             //Put data to DataTable
             dt = new DataTable();
-            da = new SqlDataAdapter(command);
+            da = new MySqlDataAdapter(command);
             da.Fill(dt);
-
+            
             foreach (DataRow dr in dt.Rows)
             {
-                Console.WriteLine("ID: " + dr.Field<Guid>("id"));
-                id = dr.Field<Guid>("id");
+                Console.WriteLine("ID: " + dr.Field<int>("id"));
+                id = dr.Field<int>("id");
                 Console.WriteLine("Username: " + dr.Field<string>("username"));
                 username = dr.Field<string>("username");
                 Console.WriteLine("Allowed Active: " + dr.Field<int>("allowedactive"));
@@ -239,9 +270,10 @@ namespace RanOnlineTrainer
         private Boolean updateCurrentActive() {
             Boolean isAllowed = false;
             if (active < allowedactive) {
-                SqlCommand update = new SqlCommand("UPDATE account SET active = active + 1,lastlogin = @date WHERE username = @user;", connection);
+                MySqlCommand update = new MySqlCommand("UPDATE u687082794_randatabase.accounts SET active = active + 1,lastlogin = @date,ipaddress = @ipaddress WHERE username = @user;", connection);
                 update.Parameters.AddWithValue("@date", Convert.ToDateTime(DateTime.Now));
                 update.Parameters.AddWithValue("@user", username);
+                update.Parameters.AddWithValue("@ipaddress", getPublicIpAddress());
                 update.ExecuteNonQuery();
                 isAllowed = true;
             }
@@ -252,6 +284,20 @@ namespace RanOnlineTrainer
         {
             updater.DoUpdate();
             Console.WriteLine("clicking the check update button...");
+        }
+
+        private string getPublicIpAddress() {
+            string url = "http://checkip.dyndns.org";
+            System.Net.WebRequest req = System.Net.WebRequest.Create(url);
+            System.Net.WebResponse resp = req.GetResponse();
+            System.IO.StreamReader sr = new System.IO.StreamReader(resp.GetResponseStream());
+            string response = sr.ReadToEnd().Trim();
+            string[] ipAddressWithText = response.Split(':');
+            string ipAddressWithHTMLEnd = ipAddressWithText[1].Substring(1);
+            string[] ipAddress = ipAddressWithHTMLEnd.Split('<');
+            string mainIP = ipAddress[0];
+            Console.WriteLine(mainIP);
+            return mainIP;
         }
     }
 }
