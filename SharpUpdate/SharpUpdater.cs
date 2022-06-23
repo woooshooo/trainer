@@ -24,20 +24,28 @@ namespace SharpUpdate
             this.bgWorker.RunWorkerCompleted += BgWorker_RunWorkerCompleted;
         }
         public void DoUpdate() {
-            if (!this.bgWorker.IsBusy)
+            try
             {
-                this.bgWorker.RunWorkerAsync(this.applicationInfo);
+                if (!this.bgWorker.IsBusy)
+                {
+                    this.bgWorker.RunWorkerAsync(this.applicationInfo);
+                }
             }
-            else {
-                MessageBox.Show("Trainer up to date.");
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
             }
+            
+            
         }
         private void BgWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             ISharpUpdateable application = (ISharpUpdateable)e.Argument;
 
-            if (!SharpUpdateXml.ExistsOnServer(application.UpdateXmlLocation))
+            if (!SharpUpdateXml.ExistsOnServer(application.UpdateXmlLocation)) {
+                MessageBox.Show("Trainer is up to date.");
                 e.Cancel = true;
+            }
             else
                 e.Result = SharpUpdateXml.Parse(application.UpdateXmlLocation, application.ApplicationID);
         }
@@ -58,33 +66,33 @@ namespace SharpUpdate
 
         private void DownloadUpdate(SharpUpdateXml update)
         {
-            Console.WriteLine("Inside Download Update");
+            Console.WriteLine("Verifying Download Update");
             SharpUpdateDownloadForm form = new SharpUpdateDownloadForm(update.Uri, update.MD5, this.applicationInfo.ApplicationIcon);
             DialogResult result = form.ShowDialog(this.applicationInfo.Context);
-            Console.WriteLine("Dialog result: " + result);
+            string currentPath = this.applicationInfo.ApplicationAssembly.Location;
+            string newPath = Path.GetDirectoryName(currentPath) + "\\" + update.FileName;
+            string currAppName = Path.GetFileName(newPath);
+            string[] splitText = currAppName.Split('.');
+            string newFileName = splitText[0] + " v" + update.Version.ToString() + "." + splitText[1];
+            string updatedPath = Path.GetDirectoryName(newPath) + "\\" + newFileName;
+
             if (result == DialogResult.OK) {
-                string currentPath = this.applicationInfo.ApplicationAssembly.Location;
-                string newPath = Path.GetDirectoryName(currentPath) + "\\" + update.FileName;
-                UpdateApplication(form.TempFilePath, currentPath, newPath, update.Version.ToString());
-                MessageBox.Show("Download Complete.\nYou can delete this old version.\nApp will now close.");
+                UpdateApplication(form.TempFilePath, updatedPath);
+                ps = PowerShell.Create();
+                MessageBox.Show("Trainer Verified.\nYou can delete this old version.\nApp will now close.", "", MessageBoxButtons.OK);                
+                ps.AddCommand("Start-Process").AddParameter("FilePath", updatedPath).AddParameter("verb", "runas").Invoke();
+                ps.Stop();
                 Application.Exit();
             } else if (result == DialogResult.Abort) {
                 MessageBox.Show("The update download was cancelled. \nThis program has not been modified.", "Update Download Cancelled", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            else
-            {
+            else {
                 MessageBox.Show("There was a problem downloading the update. \nPlease try again later.", "Update Download Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
-        private void UpdateApplication(string tempFilePath, string currentPath, string newPath, string version)
+        private void UpdateApplication(string tempFilePath, string updatedPath)
         {
-            string currname = Path.GetFileName(newPath);
-            string[] splitText = currname.Split('.');
-            string newFileName = splitText[0] + " v" + version + "." + splitText[1];
-            string updatedPath = Path.GetDirectoryName(newPath) + "\\" + newFileName;
-            //string s = String.Format("Copy-Item \"{0}\" -Destination \"{1}\"", tempFilePath, newPath);
-
             //MessageBox.Show("Running Script...");
             ps = PowerShell.Create();            
             ps.AddCommand("Copy-Item").AddParameter("Path", tempFilePath).AddParameter("Destination", updatedPath).Invoke();

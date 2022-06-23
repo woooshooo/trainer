@@ -31,13 +31,14 @@
             this.CloseLabel = new System.Windows.Forms.Label();
             this.MinimizeLabel = new System.Windows.Forms.Label();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.refresh_btn = new System.Windows.Forms.Button();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.username = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.allowedactive = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.active = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lastlogin = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ranserver = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.refresh_btn = new System.Windows.Forms.Button();
+            this.ipaddress = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -74,13 +75,24 @@
             this.allowedactive,
             this.active,
             this.lastlogin,
-            this.ranserver});
+            this.ranserver,
+            this.ipaddress});
             this.dataGridView.Location = new System.Drawing.Point(22, 40);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.Size = new System.Drawing.Size(537, 306);
             this.dataGridView.TabIndex = 7;
             this.dataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellValueChanged);
             this.dataGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dataGridView_UserDeletingRow);
+            // 
+            // refresh_btn
+            // 
+            this.refresh_btn.Location = new System.Drawing.Point(22, 11);
+            this.refresh_btn.Name = "refresh_btn";
+            this.refresh_btn.Size = new System.Drawing.Size(75, 23);
+            this.refresh_btn.TabIndex = 8;
+            this.refresh_btn.Text = "Refresh";
+            this.refresh_btn.UseVisualStyleBackColor = true;
+            this.refresh_btn.Click += new System.EventHandler(this.refresh_btn_Click);
             // 
             // id
             // 
@@ -119,15 +131,11 @@
             this.ranserver.HeaderText = "Ran Server";
             this.ranserver.Name = "ranserver";
             // 
-            // refresh_btn
+            // ipaddress
             // 
-            this.refresh_btn.Location = new System.Drawing.Point(22, 11);
-            this.refresh_btn.Name = "refresh_btn";
-            this.refresh_btn.Size = new System.Drawing.Size(75, 23);
-            this.refresh_btn.TabIndex = 8;
-            this.refresh_btn.Text = "Refresh";
-            this.refresh_btn.UseVisualStyleBackColor = true;
-            this.refresh_btn.Click += new System.EventHandler(this.refresh_btn_Click);
+            this.ipaddress.DataPropertyName = "ipaddress";
+            this.ipaddress.HeaderText = "IP Address";
+            this.ipaddress.Name = "ipaddress";
             // 
             // admin
             // 
@@ -165,5 +173,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn active;
         private System.Windows.Forms.DataGridViewTextBoxColumn lastlogin;
         private System.Windows.Forms.DataGridViewTextBoxColumn ranserver;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ipaddress;
     }
 }

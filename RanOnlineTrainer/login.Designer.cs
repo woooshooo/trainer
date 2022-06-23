@@ -122,6 +122,7 @@
             this.adminlogin_btn.TabIndex = 6;
             this.adminlogin_btn.Text = "Admin Login";
             this.adminlogin_btn.UseVisualStyleBackColor = true;
+            this.adminlogin_btn.Visible = false;
             this.adminlogin_btn.Click += new System.EventHandler(this.adminlogin_btn_Click);
             // 
             // checkUpdate_btn

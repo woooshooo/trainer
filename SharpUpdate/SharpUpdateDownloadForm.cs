@@ -1,25 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Security.Authentication;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
-using System.Web;
-using AltoHttp;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
+﻿using AltoHttp;
 using AltoHttp.Exceptions;
 using AltoHttp.NativeMessages;
-
+using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.IO;
+using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
+using System.Windows.Forms;
 
 namespace SharpUpdate
 {
@@ -48,36 +37,6 @@ namespace SharpUpdate
 
         internal string TempFilePath { get { return this.tempFile; } }
 
-        public SharpUpdateDownloadForm(Uri location)
-        {
-            InitializeComponent();
-            string url = location.ToString();
-            try
-            {
-                Process.Start(url);
-            }
-            catch
-            {
-                // hack because of this: https://github.com/dotnet/corefx/issues/10361
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    url = url.Replace("&", "^&");
-                    Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                {
-                    Process.Start("xdg-open", url);
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                {
-                    Process.Start("open", url);
-                }
-                else
-                {
-                    throw;
-                }
-            }
-        }
         internal SharpUpdateDownloadForm(Uri location, string md5, Icon programIcon) {
             InitializeComponent();
             
@@ -97,9 +56,6 @@ namespace SharpUpdate
                 Console.WriteLine("location: " + location);
                 Console.WriteLine("tempFile: " + this.tempFile);
 
-  
-                //httpDownloader = new HttpDownloader(location.ToString(), $"{Path.GetTempPath()}\\RanOnlineTrainer.exe");
-                //httpDownloader = new HttpDownloader(location.ToString(), $"{Path.GetTempPath()}\\{Path.GetFileName(tempFile)}");
                 httpDownloader = new HttpDownloader(location.ToString(), this.tempFile);
                 httpDownloader.DownloadCompleted += HttpDownloader_DownloadCompleted;
                 httpDownloader.ProgressChanged += HttpDownloader_ProgressChanged;
@@ -149,23 +105,22 @@ namespace SharpUpdate
         {
             this.Invoke((MethodInvoker)delegate
             {
-                downloading_label.Text = "Verifying Download...";
-                progressBar.Style = ProgressBarStyle.Marquee;   
-            });
-            bgWorker.RunWorkerAsync(new string[] { this.tempFile, this.md5 });
-            //MessageBox.Show("Download Complete.");
-            
-            //bgWorker.Dispose();
+                downloading_label.Text = "Download Complete";
+                progressBar.Style = ProgressBarStyle.Marquee;
+                bgWorker.RunWorkerAsync(new string[] { this.tempFile, this.md5 });
+                bgWorker.Dispose();
+                MessageBox.Show("Download Complete.");
+            });            
         }
 
         private void BgWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            //MessageBox.Show("BgWorker_DoWork");
+            //MessageBox.Show("Download Complete.");
             string file = ((string[])e.Argument)[0];
             string updateMd5 = ((string[])e.Argument)[1];
             if (Hasher.HashFile(file, HashType.MD5) != updateMd5)
             {
-                Console.WriteLine("file: " + file + " is not equal to updateMd5: " + updateMd5);
+                Console.WriteLine("File: " + file + " is not equal to updateMd5: " + updateMd5);
                 this.DialogResult = DialogResult.No;
             }
             else { this.DialogResult = DialogResult.OK; }
@@ -180,7 +135,6 @@ namespace SharpUpdate
             {
                 this.DialogResult = DialogResult.OK;
             }
-            //this.Close();
         }
 
         private void SharpUpdateDownloadForm_MouseDown(object sender, MouseEventArgs e)
@@ -212,33 +166,6 @@ namespace SharpUpdate
             this.Close();
         }
 
-        private void WebClient_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
-        {
-            if (e.Error != null)
-            {
-                this.DialogResult = DialogResult.No;
-                Console.WriteLine("e.Error: " + e.Error.ToString());
-                this.Close();
-            }
-            else if (e.Cancelled)
-            {
-                this.DialogResult = DialogResult.Abort;
-                this.Close();
-            }
-            else
-            {
-                progress_label.Text = "Verifying Download...";
-                progressBar.Style = ProgressBarStyle.Marquee;
-
-                bgWorker.RunWorkerAsync(new string[] { this.tempFile, this.md5 });
-            }
-        }
-
-        private void WebClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-        {
-            this.progressBar.Value = e.ProgressPercentage;
-            this.downloading_label.Text = String.Format("Downloaded {0} of {1}", FormatBytes(e.BytesReceived, 1, true), FormatBytes(e.TotalBytesToReceive, 1, true));
-        }
 
         private static bool ValidateRemoteCertificate(object sender, X509Certificate cert, X509Chain chain, SslPolicyErrors error)
         {
@@ -254,8 +181,6 @@ namespace SharpUpdate
 
             return false;
         }
-
-
         private string FormatBytes(long bytes, int decimalPlaces, bool showByteType)
         {
             double newBytes = bytes;
@@ -289,29 +214,6 @@ namespace SharpUpdate
             if (showByteType)
                 formatString += byteType;
             return string.Format(formatString, newBytes);
-        }
-
-
-        private void WebClient_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
-        {
-            if (e.Error != null)
-            {
-                this.DialogResult = DialogResult.No;
-                Console.WriteLine("e.Error: " + e.Error.ToString());
-                this.Close();
-            }
-            else if (e.Cancelled)
-            {
-                this.DialogResult = DialogResult.Abort;
-                this.Close();
-            }
-            else
-            {
-                progress_label.Text = "Verifying Download...";
-                progressBar.Style = ProgressBarStyle.Marquee;
-
-                bgWorker.RunWorkerAsync(new string[] { this.tempFile, this.md5 });
-            }
         }
     }
 }

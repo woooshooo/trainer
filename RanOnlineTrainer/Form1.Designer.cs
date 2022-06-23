@@ -255,7 +255,7 @@ namespace RanOnlineTrainer
             this.qaplabel.BackColor = System.Drawing.Color.Transparent;
             this.qaplabel.Font = new System.Drawing.Font("Arial Narrow", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.qaplabel.ForeColor = System.Drawing.Color.Linen;
-            this.qaplabel.Location = new System.Drawing.Point(63, 255);
+            this.qaplabel.Location = new System.Drawing.Point(63, 256);
             this.qaplabel.Name = "qaplabel";
             this.qaplabel.Size = new System.Drawing.Size(35, 25);
             this.qaplabel.TabIndex = 0;
@@ -263,7 +263,7 @@ namespace RanOnlineTrainer
             // 
             // QAPButton
             // 
-            this.QAPButton.Location = new System.Drawing.Point(105, 255);
+            this.QAPButton.Location = new System.Drawing.Point(105, 257);
             this.QAPButton.Name = "QAPButton";
             this.QAPButton.Size = new System.Drawing.Size(68, 23);
             this.QAPButton.TabIndex = 2;
@@ -307,7 +307,6 @@ namespace RanOnlineTrainer
             // 
             // attkspd_btn
             // 
-            this.attkspd_btn.Enabled = false;
             this.attkspd_btn.Location = new System.Drawing.Point(104, 164);
             this.attkspd_btn.Name = "attkspd_btn";
             this.attkspd_btn.Size = new System.Drawing.Size(68, 23);
@@ -423,6 +422,7 @@ namespace RanOnlineTrainer
             this.Opacity = 0.8D;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "RanOnline Trainer";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MainForm_MouseDown);
             this.ResumeLayout(false);

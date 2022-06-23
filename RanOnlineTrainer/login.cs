@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.Management.Automation;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace RanOnlineTrainer
@@ -29,9 +30,7 @@ namespace RanOnlineTrainer
         public static MySqlDataAdapter da;
         private Boolean isValid = false;
         private SharpUpdater updater;
-        private PowerShell ps;
-        private int getIpRetries = 0;
-        private int getIpMAXRetries = 3;
+        internal MainForm frm;
 
 
         public login()
@@ -39,6 +38,8 @@ namespace RanOnlineTrainer
             InitializeComponent();
             this.version_label.Text = "Current Version: " + this.ApplicationAssembly.GetName().Version.ToString();
             updater = new SharpUpdater(this);
+            connection = new MySqlConnection(connectionString);
+            invalidaccess_label.Hide();
         }
 
         /* For Auto Update */
@@ -75,7 +76,7 @@ namespace RanOnlineTrainer
         {
             get
             {
-                return new Uri("http://webstergenise.com/trainer/update.xml");
+                return new Uri("http://webstergenise.com/trainer/updatebalikran.xml");
             }
         }
 
@@ -165,12 +166,10 @@ namespace RanOnlineTrainer
 
         private void login_Load(object sender, EventArgs e)
         {
-            connection = new MySqlConnection(connectionString);
-            invalidaccess_label.Hide();
-
+            frm = new MainForm(); //preloads main form.
             //Test Connection
             //testConnection();         
-            
+
         }
         private void adminlogin_btn_Click(object sender, EventArgs e)
         {
@@ -183,9 +182,7 @@ namespace RanOnlineTrainer
                 if (updateCurrentActive())
                 {
                     MainForm mainfrm = new MainForm();
-                    //admin adminfrm = new admin();
                     mainfrm.Show();
-                    //adminfrm.Show();
                     this.Hide();
                 }
                 else
@@ -206,32 +203,39 @@ namespace RanOnlineTrainer
             String user_input = useraccount_tb.Text;
             checkLogin(user_input);
             setResultToDataTable();
-            admin.ADMIN_LOGIN = 0;
             invalidaccess_label.Hide();
             if (isValid)
             {
-                if (updateCurrentActive()) {
-                    MainForm frm = new MainForm();
-                    frm.Show();
-                    connection.Close();
-                    this.Hide();
-                } else
-                {
-                    invalidaccess_label.Show();
-                    connection.Close();
-                }
+                updateCurrentActive();
+                MessageBox.Show("Logging in...", "", MessageBoxButtons.OK);
+                frm.Show();
+                connection.Close();
+                this.Hide();
             } else {
                 invalidaccess_label.Show();
                 connection.Close();
             }
         }
         private Boolean checkLogin(string user_input) {
-            string commandText = "SELECT * FROM u687082794_randatabase.accounts WHERE username=@user";          
+            Console.WriteLine("Checking if user is admin");
+            string commandText = "SELECT * FROM u687082794_randatabase.accounts WHERE username = @user AND ranserver = 'admin'";
             command = new MySqlCommand(commandText, connection);
             command.Parameters.AddWithValue("@user", user_input);
             connection.Open();
-            if (Convert.ToString(command.ExecuteScalar()) != null) {
+            if (Convert.ToString(command.ExecuteScalar()) != "") {
                 isValid = true;
+                MainForm.ADMIN_LOGIN = 1;
+                Console.WriteLine("user is admin");
+            } else {
+                Console.WriteLine("Checking if user is valid");
+                string commandText2 = "SELECT * FROM u687082794_randatabase.accounts WHERE username=@user";
+                MySqlCommand command = new MySqlCommand(commandText2, connection);
+                command.Parameters.AddWithValue("@user", user_input);
+                if (Convert.ToString(command.ExecuteScalar()) != "") {
+                    isValid = true;
+                    MainForm.ADMIN_LOGIN = 0;
+                    Console.WriteLine("user is valid");
+                }
             }
             return isValid;
         }
@@ -274,12 +278,11 @@ namespace RanOnlineTrainer
         private Boolean updateCurrentActive() {
             Boolean isAllowed = false;
             if (active < allowedactive) {
-                MySqlCommand update = new MySqlCommand("UPDATE u687082794_randatabase.accounts SET active = active + 1,lastlogin = @date,ipaddress = @ipaddress WHERE username = @user;", connection);
+                MySqlCommand update = new MySqlCommand("UPDATE u687082794_randatabase.accounts SET active = active + 1,lastlogin = @date WHERE username = @user;", connection);
                 update.Parameters.AddWithValue("@date", Convert.ToDateTime(DateTime.Now));
                 update.Parameters.AddWithValue("@user", username);
-                update.Parameters.AddWithValue("@ipaddress", getPublicIpAddress());
                 update.ExecuteNonQueryAsync();
-                isAllowed = true;
+                isAllowed = true;                
             }
             return isAllowed;
         }
@@ -288,38 +291,6 @@ namespace RanOnlineTrainer
         {
             updater.DoUpdate();
             Console.WriteLine("clicking the check update button...");
-        }
-
-        private string getPublicIpAddress() {
-            try
-            {
-                string url = "http://checkip.dyndns.org";
-                System.Net.WebRequest req = System.Net.WebRequest.Create(url);
-                System.Net.WebResponse resp = req.GetResponse();
-                System.IO.StreamReader sr = new System.IO.StreamReader(resp.GetResponseStream());
-                string response = sr.ReadToEnd().Trim();
-                string[] ipAddressWithText = response.Split(':');
-                string ipAddressWithHTMLEnd = ipAddressWithText[1].Substring(1);
-                string[] ipAddress = ipAddressWithHTMLEnd.Split('<');
-                string mainIP = ipAddress[0];
-                Console.WriteLine(mainIP);
-                sr.Close();
-                resp.Close();
-                return mainIP;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                ps = PowerShell.Create();
-                ps.AddCommand("Clear-DnsClientCache").Invoke();
-                ps.Stop();
-                if (getIpRetries != getIpMAXRetries) {
-                    getPublicIpAddress();
-                    getIpRetries++;
-                }
-                return "Could not get IP";
-            }
-            
         }
     }
 }

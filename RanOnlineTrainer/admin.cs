@@ -16,7 +16,6 @@ namespace RanOnlineTrainer
     public partial class admin : Form
     {
 
-        public static int ADMIN_LOGIN = 1;
         private static Random _random = new Random();
         public int RandomReuse() => _random.Next(1, 1000000);
         //private readonly string connectionString = "Data Source=sql.bsite.net\\MSSQL2016;Initial Catalog=woooshooo_randb;Persist Security Info=True;User ID=woooshooo_randb;Password=qweqwe123";
@@ -94,8 +93,9 @@ namespace RanOnlineTrainer
                 {
                     connection.Open();
                     DataGridViewRow dgvrow = dataGridView.CurrentRow;
-                    MySqlCommand sqlCommand = new MySqlCommand("INSERT INTO u687082794_randatabase.accounts(id, username, allowedactive, active, lastlogin, ranserver) VALUES(@id, @username, @allowedactive, @active, @lastlogin, @ranserver)", connection);
-                    MySqlCommand sqlCommand2 = new MySqlCommand("UPDATE u687082794_randatabase.accounts SET id = @id, username = @username, allowedactive = @allowedactive, active = @active, lastlogin = @lastlogin,ranserver = @ranserver WHERE id = @id", connection);
+                    dataGridView.MultiSelect = false;
+                    MySqlCommand sqlCommand = new MySqlCommand("INSERT INTO u687082794_randatabase.accounts(id, username, allowedactive, active, lastlogin, ranserver, ipaddress) VALUES(@id, @username, @allowedactive, @active, @lastlogin, @ranserver, @ipaddress)", connection);
+                    MySqlCommand sqlCommand2 = new MySqlCommand("UPDATE u687082794_randatabase.accounts SET id = @id, username = @username, allowedactive = @allowedactive, active = @active, lastlogin = @lastlogin,ranserver = @ranserver, ipaddress = @ipaddress WHERE id = @id", connection);
                     if (dgvrow.Cells["id"].Value == DBNull.Value) {
                         sqlCommand.Parameters.AddWithValue("@id", RandomReuse());
                         sqlCommand.Parameters.AddWithValue("@username", dgvrow.Cells["username"].Value.ToString());
@@ -103,6 +103,7 @@ namespace RanOnlineTrainer
                         sqlCommand.Parameters.AddWithValue("@active", dgvrow.Cells["active"].Value.ToString());
                         sqlCommand.Parameters.AddWithValue("@lastlogin", Convert.ToDateTime(DateTime.Now));
                         sqlCommand.Parameters.AddWithValue("@ranserver", dgvrow.Cells["ranserver"].Value.ToString());
+                        sqlCommand.Parameters.AddWithValue("@ipaddress", dgvrow.Cells["ipaddress"].Value.ToString());
                         Console.WriteLine("Inserting...");
                         sqlCommand.ExecuteNonQuery();
                         Console.WriteLine("Executing Non Query...");
@@ -112,7 +113,8 @@ namespace RanOnlineTrainer
                         sqlCommand2.Parameters.AddWithValue("@allowedactive", dgvrow.Cells["allowedactive"].Value.ToString());
                         sqlCommand2.Parameters.AddWithValue("@active", dgvrow.Cells["active"].Value.ToString());
                         sqlCommand2.Parameters.AddWithValue("@lastlogin", Convert.ToDateTime(DateTime.Now));
-                        sqlCommand2.Parameters.AddWithValue("@ranserver", dgvrow.Cells["ranserver"].Value.ToString());         
+                        sqlCommand2.Parameters.AddWithValue("@ranserver", dgvrow.Cells["ranserver"].Value.ToString());
+                        sqlCommand2.Parameters.AddWithValue("@ipaddress", dgvrow.Cells["ipaddress"].Value.ToString());
                         Console.WriteLine("Updating");
                         sqlCommand2.ExecuteNonQuery();
                         Console.WriteLine("Executing Non Query...");
