@@ -307,6 +307,7 @@ namespace RanOnlineTrainer
             // 
             // attkspd_btn
             // 
+            this.attkspd_btn.Enabled = false;
             this.attkspd_btn.Location = new System.Drawing.Point(104, 164);
             this.attkspd_btn.Name = "attkspd_btn";
             this.attkspd_btn.Size = new System.Drawing.Size(68, 23);

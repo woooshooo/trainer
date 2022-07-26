@@ -76,7 +76,7 @@ namespace RanOnlineTrainer
         {
             get
             {
-                return new Uri("http://webstergenise.com/trainer/updatebalikran.xml");
+                return new Uri("http://webstergenise.com/trainer/updatebloodran.xml");
             }
         }
 

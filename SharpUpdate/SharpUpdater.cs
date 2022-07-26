@@ -24,6 +24,7 @@ namespace SharpUpdate
             this.bgWorker.RunWorkerCompleted += BgWorker_RunWorkerCompleted;
         }
         public void DoUpdate() {
+            Console.WriteLine("Doing Update...");
             try
             {
                 if (!this.bgWorker.IsBusy)

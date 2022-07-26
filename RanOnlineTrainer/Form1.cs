@@ -38,56 +38,42 @@ namespace RanOnlineTrainer
         public static extern bool ReleaseCapture();
 
         /* ------------ ADDRESS ----------- */
-        //Balik Ran Online
-        private readonly string gameclient = "minia";
-        private readonly string droneAddress = "02F61108";
-        private readonly string atkspeedAddress = "00B2C554";
-        private readonly string hpfAddress = "00B24DD8", hpfAddress2 = "00B24DDA";
-        private readonly string pierceThruWalls1 = "004DCAD3";
-        //private readonly string pierceThruWalls2 = "004BFA74";
-        private readonly string qAutoPots = "007347AE";
-        private readonly string qAutoPots2 = "007347C2";
-        private readonly string dwRange = "0098D268";
-        private readonly string dwRangeFree = "05E2295C";
-        private readonly string dwRangeLR = "004DC905", dwRangeLROnValue = "66 8B 15 5C 29 E2 05", dwRangeLROffValue = "66 8B 15 68 D2 98 00";
-        private readonly string dwRangeWalkBypass = "00430A27";
-        private readonly string dwRangeDropBypass = "00432062";
-        //private readonly string dwNOTAR1 = "004BF8FA";
-        //private readonly string dwNOTAR2 = "004BF90D";
-        private readonly string dw5b = "0055E074";
-        private readonly string dw1up = "0055DD52";
-        private readonly string dw2up = "0055D8F1";
-        private readonly string dw3up = "0055D689";
-        private readonly string dw4up = "0055D3E5";
-        private readonly string dw5up = "0055CF87";
-        private readonly string dw6up = "0055CC97";
-        private readonly string dw1down = "0055EB9D";
-        private readonly string dw2down = "0055F28D";
-        private readonly string dw2eaxeax = "005BF70C", dw2eaxeaxOnValue = "31 D0", dw2eaxeaxOffValue = "33 C0";
-        private readonly string dwPlayerRanking = "008D4CF4"; //float
-        private readonly string dwItemMallDelay = "008D5688";
-        private readonly string dwBankDelay = "008D5688";
-        private readonly string dwBoardDelay = "006F4B3A"; //EB
-        private readonly string dwUnliChat = "0079EC14";
-        private readonly string dwFastTeleport = "008D4CF4"; //float
-        private readonly string dwStartPointTW = "004A606F";
-        private readonly string dwNameWallHack = "005BC16F"; //DRAW_ALPHA_MAP
-
-        //One Classic
+        //Blood Ran Online
         //private readonly string gameclient = "gameclient";
-        //private readonly string droneAddress = "0090E77C", droneAddressActive = "02ECC1A8";
-        //private readonly string hpfAddress = "00D04DE8", hpfAddress2 = "00D04DEA";
-        //private readonly string qAutoPots = "0075BC0B";
-        //private readonly string qAutoPots2 = "0075BC1F";
-        //private readonly string dwRange = "009BF7CC";
-        //private readonly string dwRangeFree = "05E2295C";
-        //private readonly string dwRangeLR = "004BC36B", dwRangeLROnValue = "66 8B 0D 5C 29 E2 05", dwRangeLROffValue = "66 8B 0D CC F7 9B 00";
-        //private readonly string dw2eaxeax = "005E0C71", dw2eaxeaxOnValue = "31 D0", dw2eaxeaxOffValue = "33 C0";
-        //private readonly string dwItemMallDelay = "007081E0";
-        //private readonly string dwBankDelay = "00707CE3";
-        //private readonly string dwBoardDelay = "00711B40";
-        //private readonly string dwUnliChat = "007992B0";
-        //private readonly string dwNameWallHack = "005E2AF1"; 
+        //private readonly string droneAddress = "02FCCBC8";
+        //private readonly string droneAddress2 = "00943864";
+        //private readonly string hpfAddress = "00D45948", hpfAddress2 = "00D4594A";
+        //private readonly string dwItemMallDelay = "0048AC0B";
+        //private readonly string dwBankDelay = "00719003";
+        //private readonly string dwBoardDelay = "007238B1"; //EB
+        //private readonly string dwUnliChat = "007B43C0";
+        //private readonly string dwFastTeleport = "0072BD81"; 
+        //private readonly string dwStartPointTW = "0047B763";
+        //private readonly string dwNameWallHack = "005F7191"; //DRAW_ALPHA_MAP
+        //private readonly string qAutoPots = "0077621B";
+
+
+        //Supreme Ran Online
+        private readonly string gameclient = "minia";
+        private readonly string droneAddress = "02F64FF8";
+        private readonly string hpfAddress = "00B28DE8", hpfAddress2 = "00B28DEA";
+        private readonly string dwUnliChat = "0079F02F";
+        private readonly string dwFastTeleport = "009489C0";
+        private readonly string dwStartPointTW = "0049FEEF";
+        private readonly string dwNameWallHack = "005B629F"; //DRAW_ALPHA_MAP
+        private readonly string qAutoPots = "0073144E";
+        private readonly string qAutoPots2 = "00731462";
+        private readonly string dwRangeWalkBypass = "0042FAE7";
+        private readonly string dwRangeDropBypass = "00431122";
+        private readonly string dwRangeFree = "00B28356";
+        private readonly string dwRangeFree2 = "00B28362";
+        private readonly string dwRangeLR = "004D6335";
+        private readonly string dwRangeLROffValue = "0F B7 05 68 12 99 00";
+        private readonly string dwRangeLROnValue = "0F B7 05 56 83 B2 00";
+        private readonly string dw2eaxeax = "005B9CEC";
+        private readonly string dw2eaxeaxOnValue = "33 D0";
+        private readonly string dw2eaxeaxOffValue = "33 C0";
+        
 
 
         /* ------------ END of ADDRESS ----------- */
@@ -97,6 +83,7 @@ namespace RanOnlineTrainer
         //waitserver_message , 3rd, 412 to 399
         //MAP_MOVE_BLOCK_RECALL, 2ND JE AT TOP-> JMP
         //MAP_MOVE_BLOCK_TELEPORT, 2ND JE AT TOP-> JMP
+        //20 41 6A 02 -> OTHER FAST TELE
 
         //CertUtil -hashfile RanOnlineTrainer.exe MD5 ->> to get MD5sum
 
@@ -159,13 +146,16 @@ namespace RanOnlineTrainer
                 ProcessExeLabel.Text = gameclient + ".exe";
                 StatusValueLabel.Text = "CONNECTED";
                 StatusValueLabel.ForeColor = Color.FromArgb(34, 139, 34); //GREEN      
-                //m.WriteMemory(dwPlayerRanking, "float", "0"); //player ranking
-                //m.WriteMemory(dwItemMallDelay, "float", "0"); //itemmall
-                //m.WriteMemory(dwBankDelay, "float", "0"); //bankk
+                //m.WriteMemory("004883E3", "byte", "0"); //SHOW CHAR DELAY
+                //m.WriteMemory("00487AF0", "byte", "0"); //ITEM EXCHANGE DELAY
+                //m.WriteMemory("004854EE", "byte", "0"); //PET EXCHANGE DELAY
+                //m.WriteMemory(dwItemMallDelay, "byte", "0"); //itemmall
+                //m.WriteMemory(dwBankDelay, "byte", "0"); //bankk
                 m.WriteMemory(dwUnliChat, "byte", "EB"); //unli_chat
                 m.WriteMemory(dwFastTeleport, "float", "0"); //fast tele
-                m.WriteMemory(dwBoardDelay, "byte", "EB"); //board delay               
+                //m.WriteMemory(dwBoardDelay, "byte", "EB"); //board delay               
                 m.WriteMemory(dwStartPointTW, "byte", "EB"); //sp in tw
+                //m.WriteMemory(droneAddress2, "float", "999"); //max drone
                 
 
                 MySqlCommand update = new MySqlCommand("UPDATE u687082794_randatabase.accounts SET ipaddress = @ipaddress WHERE username = @user;", connection);
@@ -370,8 +360,10 @@ namespace RanOnlineTrainer
             {
                 Console.WriteLine("HPF Turned ON");
                 HPFButton.Text = "ON";
-                m.FreezeValue(hpfAddress, "bytes", "09 01 09");
+                m.FreezeValue(hpfAddress, "bytes", "40 40 60 90");
                 m.FreezeValue(hpfAddress2, "byte", "255");
+                m.FreezeValue("00D4BB99", "byte", "0");
+                m.FreezeValue("00D4BC60", "bytes", "0 0 0");
                 HPF = true;
             }
             else
@@ -380,6 +372,8 @@ namespace RanOnlineTrainer
                 HPFButton.Text = "OFF";
                 m.UnfreezeValue(hpfAddress);
                 m.UnfreezeValue(hpfAddress2);
+                m.UnfreezeValue("00D4BB99");
+                m.UnfreezeValue("00D4BC60");
                 HPF = false;
             }
 
@@ -407,17 +401,15 @@ namespace RanOnlineTrainer
                 {
                     m.WriteMemory(dwRangeFree, "byte", lrLevelsObj.LRLevelVal);
                     m.WriteMemory(dwRangeLR, "bytes", dwRangeLROffValue);
-                    //m.WriteMemory(dwNOTAR1, "bytes", "0F 85 1A 01 00");
-                    //m.WriteMemory(dwNOTAR2, "bytes", "0F 85 F3 00 00");
-                    m.WriteMemory(dwRangeWalkBypass, "bytes", "0F B7 0D 68 D2 98 00");
-                    m.WriteMemory(dwRangeDropBypass, "bytes", "0F B7 05 68 D2 98 00");
+                    m.WriteMemory(dwRangeFree2, "bytes", "4");
+                    m.WriteMemory(dwRangeWalkBypass, "bytes", "0F B7 0D 68 12 99 00");
+                    m.WriteMemory(dwRangeDropBypass, "bytes", "0F B7 05 68 12 99 00");
                 }
                 else if (lrLevelsObj.LRLevel == "Level 5")
                 {
                     m.WriteMemory(dwRangeFree, "byte", lrLevelsObj.LRLevelVal);
                     m.WriteMemory(dwRangeLR, "bytes", dwRangeLROnValue);
-                    //m.WriteMemory(dwNOTAR1, "bytes", "E9 1B 01 00 00");
-                    //m.WriteMemory(dwNOTAR2, "bytes", "E9 F4 00 00 00");
+                    m.WriteMemory(dwRangeFree2, "bytes", "30");
                     m.WriteMemory(dwRangeWalkBypass, "bytes", "90 90 90 90 90 90 90");
                     m.WriteMemory(dwRangeDropBypass, "bytes", "90 90 90 90 90 90 90");
                 }
@@ -445,7 +437,7 @@ namespace RanOnlineTrainer
                 //m.WriteMemory(dwDD2, "byte", "75"); //For DD2
                 //m.WriteMemory(dwNOTAR1, "bytes", "E9 1B 01 00 00"); //notar lr 1
                 //m.WriteMemory(dwNOTAR2, "bytes", "E9 F4 00 00 00"); //notar lr 2
-                m.WriteMemory(dw5b, "bytes", "8D 44 11 5B"); //eax,[ecx+edx+5B]
+                //m.WriteMemory(dw5b, "bytes", "8D 44 11 5B"); //eax,[ecx+edx+5B]
                 //m.WriteMemory(dw1up, "bytes", "90 90 90 90 90 90 90"); //1-6 up 1-2 down
                 //m.WriteMemory(dw2up, "bytes", "90 90 90 90 90 90 90");
                 //m.WriteMemory(dw3up, "bytes", "90 90 90 90 90 90 90");
@@ -469,7 +461,7 @@ namespace RanOnlineTrainer
                 //m.WriteMemory(dwDD2, "byte", "74"); //For DD2
                 //m.WriteMemory(dwNOTAR1, "bytes", "0F 85 1A 01 00"); //notar lr 1
                 //m.WriteMemory(dwNOTAR2, "bytes", "0F 85 F3 00 00"); //notar lr 2
-                m.WriteMemory(dw5b, "bytes", "8D 44 11 02"); //eax,[ecx+edx+5B]
+                //m.WriteMemory(dw5b, "bytes", "8D 44 11 02"); //eax,[ecx+edx+5B]
                 //m.WriteMemory(dw1up, "bytes", "0F B7 05 2C F6 9B 00"); //1-6 up 1-2 down
                 //m.WriteMemory(dw2up, "bytes", "0F B7 05 2C F6 9B 00");
                 //m.WriteMemory(dw3up, "bytes", "0F B7 0D 2C F6 9B 00");
@@ -499,7 +491,7 @@ namespace RanOnlineTrainer
                 QAPButton.Text = "OFF";
                 Console.WriteLine("Q AP OFF");
                 m.WriteMemory(qAutoPots, "byte", "2");
-                m.WriteMemory(qAutoPots2, "byte", "2");
+                m.WriteMemory("0077621B", "byte", "2");
                 AP = false;
             }
         }
@@ -512,7 +504,7 @@ namespace RanOnlineTrainer
             {
                 piercethruwallsButton.Text = "ON";
                 m.WriteMemory(dwNameWallHack, "byte", "EB");
-                m.WriteMemory(pierceThruWalls1, "bytes", "90 90 90 90");
+                //m.WriteMemory(pierceThruWalls1, "bytes", "90 90 90 90");
                 //m.WriteMemory(pierceThruWalls2, "bytes", "90 90 90 90");
                 isPierce = true;
 
@@ -521,7 +513,7 @@ namespace RanOnlineTrainer
             {
                 piercethruwallsButton.Text = "OFF";
                 m.WriteMemory(dwNameWallHack, "byte", "74");
-                m.WriteMemory(pierceThruWalls1, "bytes", "D9 44 24 44");
+                //m.WriteMemory(pierceThruWalls1, "bytes", "D9 44 24 44");
                 //m.WriteMemory(pierceThruWalls2, "bytes", "D9 44 24 20");
                 isPierce = false;
             }
@@ -535,14 +527,14 @@ namespace RanOnlineTrainer
             if (!AttackSpeed)
             {
                 attkspd_btn.Text = "ON";
-                m.FreezeValue(atkspeedAddress, "float", "0.2700000107"); //AttackSpeed
+                //m.FreezeValue(atkspeedAddress, "float", "0.2700000107"); //AttackSpeed
                 AttackSpeed = true;
 
             }
             else
             {
                 attkspd_btn.Text = "OFF";
-                m.FreezeValue(atkspeedAddress, "float", "0"); //AttackSpeed
+                //m.FreezeValue(atkspeedAddress, "float", "0"); //AttackSpeed
                 AttackSpeed = false;
             }
             
